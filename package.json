@@ -1,0 +1,36 @@
+{
+  "name": "@hooray/monorepo",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "author": "Hooray <304327508@qq.com>",
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "build:vue": "pnpm build && pnpm -F vue build",
+    "build": "pnpm -F vite-plugin-archiver build",
+    "lint:eslint": "eslint . --cache --fix",
+    "postinstall": "simple-git-hooks",
+    "preinstall": "npx only-allow pnpm",
+    "release": "bumpp -r"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.5.1",
+    "@types/node": "^22.5.4",
+    "bumpp": "^9.5.2",
+    "cz-git": "^1.9.4",
+    "eslint": "^9.10.0",
+    "lint-staged": "^15.2.10",
+    "simple-git-hooks": "^2.11.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged",
+    "preserveUnused": true
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
+  }
+}

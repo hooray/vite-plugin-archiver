@@ -1,0 +1,43 @@
+{
+  "name": "vite-plugin-archiver",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Hooray <304327508@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/hooray/vite-plugin-archiver",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hooray/vite-plugin-archiver.git",
+    "directory": "packages/vite-plugin-archiver"
+  },
+  "bugs": {
+    "url": "https://github.com/hooray/vite-plugin-archiver/issues"
+  },
+  "keywords": [],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "dayjs": "^1.11.13",
+    "filesize": "^10.1.6",
+    "open": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.2",
+    "tsup": "^8.2.4",
+    "vite": "^5.4.4"
+  }
+}
