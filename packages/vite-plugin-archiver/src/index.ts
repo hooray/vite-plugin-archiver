@@ -1,3 +1,4 @@
+import type { PluginOption } from 'vite'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
@@ -5,7 +6,6 @@ import archiver from 'archiver'
 import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import open from 'open'
-import type { PluginOption } from 'vite'
 
 interface VitePluginArchiverOptions {
   /**
