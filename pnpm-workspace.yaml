@@ -6,3 +6,10 @@ packages:
   - docs
   - example/*
   - packages/*
+
+overrides:
+  nanoid: 3.3.13
+
+allowBuilds:
+  esbuild: true
+  simple-git-hooks: true

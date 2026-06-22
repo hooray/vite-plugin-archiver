@@ -1,8 +1,9 @@
+import type { Archiver, TarOptions, ZipOptions } from 'archiver'
 import type { PluginOption } from 'vite'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import archiver from 'archiver'
+import { TarArchive, ZipArchive } from 'archiver'
 import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import open from 'open'
@@ -20,21 +21,21 @@ interface VitePluginArchiverOptions {
    *
    * @default 'zip'
    */
-  archiveType: archiver.Format
+  archiveType: 'zip' | 'tar'
   /**
    * zip 选项
    * 查看：https://www.archiverjs.com/docs/archiver#zip-options
    *
    * @default { zlib: { level: 9 } }
    */
-  archiveZipOptions: archiver.ZipOptions
+  archiveZipOptions: ZipOptions
   /**
    * tar 选项
    * 查看：https://www.archiverjs.com/docs/archiver#tar-options
    *
    * @default { gzip: true, gzipOptions: { level: 9 } }
    */
-  archiveTarOptions: archiver.TarOptions
+  archiveTarOptions: TarOptions
   /**
    * 存档文件名格式，使用 dayjs 格式化
    *
@@ -75,23 +76,34 @@ export default function (userOptions: Partial<VitePluginArchiverOptions> = {}): 
       options.buildDir ??= config.build.outDir
     },
     closeBundle: {
-      handler() {
-        const archive = archiver(options.archiveType, {
-          ...(options.archiveType === 'zip' && options.archiveZipOptions),
-          ...(options.archiveType === 'tar' && options.archiveTarOptions),
-        })
+      async handler() {
+        let archive: Archiver
+        if (options.archiveType === 'zip') {
+          archive = new ZipArchive(options.archiveZipOptions)
+        }
+        else {
+          archive = new TarArchive(options.archiveTarOptions)
+        }
         const fileName = `${options.buildDir}.${dayjs().format(options.formatTemplate)}.${options.archiveType === 'zip' ? 'zip' : 'tar.gz'}`
         const outputPath = process.cwd()
         const output = fs.createWriteStream(path.join(outputPath, fileName))
-        output.on('close', () => {
-          // eslint-disable-next-line no-console
-          console.log(`Archiver file: ${outputPath} (${filesize(archive.pointer(), { standard: 'jedec' })})`)
+        const writeArchive = new Promise<void>((resolve, reject) => {
+          output.on('close', () => {
+            // eslint-disable-next-line no-console
+            console.log(`Archiver file: ${outputPath} (${filesize(archive.pointer(), { standard: 'jedec' })})`)
+            resolve()
+          })
+          output.on('error', reject)
+          archive.on('error', reject)
         })
         archive.pipe(output)
         archive.directory(options.buildDir!, false)
-        archive.finalize()
+        await Promise.all([
+          archive.finalize(),
+          writeArchive,
+        ])
         if (options.open) {
-          open(outputPath)
+          await open(outputPath)
         }
       },
       order: 'post',

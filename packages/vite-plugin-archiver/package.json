@@ -34,14 +34,14 @@
     "vite": "^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "dependencies": {
-    "archiver": "^7.0.1",
-    "dayjs": "^1.11.20",
-    "filesize": "^11.0.15",
+    "archiver": "^8.0.0",
+    "dayjs": "^1.11.21",
+    "filesize": "^11.0.17",
     "open": "^11.0.0"
   },
   "devDependencies": {
-    "@types/archiver": "^7.0.0",
-    "tsdown": "^0.21.8",
-    "vite": "^8.0.8"
+    "@types/archiver": "^8.0.0",
+    "tsdown": "^0.22.3",
+    "vite": "^8.0.16"
   }
 }
